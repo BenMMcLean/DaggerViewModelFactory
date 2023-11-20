@@ -122,7 +122,6 @@ jobs:
   publish-package:
     needs:
       - version
-      - build
     if: ${{ always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release')) }}
     runs-on: ubuntu-latest
     permissions:
@@ -137,16 +136,10 @@ jobs:
         distribution: 'temurin'
         server-id: github
         settings-path: ${{ github.workspace }}
-    - uses: actions/download-artifact@master
-      with:
-        name: viewmodelfactory-aar
-        path: ./
-    - name: Rename AAR
-      run: mv ./viewmodelfactory.aar ./viewmodelfactory/build/outputs/aar/viewmodelfactory-release.aar
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: -Pversion=${{ needs.version.outputs.version }} forms:publish
+        arguments: -Pversion=${{ needs.version.outputs.version }} viewmodelfactory:build viewmodelfactory:publish
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
