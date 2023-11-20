@@ -98,7 +98,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - uses: actions/download-artifact@master
         with:
-          name: forms-aar
+          name: viewmodelfactory-aar
           path: ./
       - name: release
         uses: actions/create-release@v1
